@@ -1,29 +1,9 @@
 import * as Yup from 'yup';
 
 import Deliveryboy from '../models/Deliveryboy';
-import Delivery from '../models/Delivery';
 import File from '../models/File';
 
 class DeliveryboyController {
-  async show(req, res) {
-    const { deliveryboyId } = req.params;
-    const deliveries = await Delivery.findAll({
-      where: {
-        deliveryboy_id: deliveryboyId,
-        end_date: null,
-        canceled_at: null,
-      },
-    });
-
-    if (!deliveries) {
-      return res
-        .status(400)
-        .json({ error: 'Not was possible to found a delivery' });
-    }
-
-    return res.json(deliveries);
-  }
-
   async index(req, res) {
     const deliveryboy = await Deliveryboy.findAll({
       attributes: ['id', 'name', 'email', 'avatar_id'],

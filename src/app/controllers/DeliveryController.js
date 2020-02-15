@@ -8,25 +8,6 @@ import NotificationMail from '../jobs/NotificationMail';
 import Queue from '../../lib/Queue';
 
 class DeliveryController {
-  async show(req, res) {
-    const { deliveryboyId } = req.params;
-    const deliveries = await Delivery.findAll({
-      where: {
-        deliveryboy_id: deliveryboyId,
-        end_date: null,
-        canceled_at: null,
-      },
-    });
-
-    if (!deliveries) {
-      return res
-        .status(400)
-        .json({ error: 'Not was possible to found a delivery' });
-    }
-
-    return res.json(deliveries);
-  }
-
   async index(req, res) {
     const { page } = req.query;
     const deliveries = await Delivery.findAll({

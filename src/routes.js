@@ -6,7 +6,6 @@ import UserController from './app/controllers/UserController';
 import SessionController from './app/controllers/SessionController';
 import RecipientController from './app/controllers/RecipientController';
 import FileController from './app/controllers/FileController';
-import NotificationController from './app/controllers/NotificationController';
 import DeliveryboyController from './app/controllers/DeliveryboyController';
 import DeliveryController from './app/controllers/DeliveryController';
 import DeliveryActionsController from './app/controllers/DeliveryActionsController';
@@ -33,15 +32,13 @@ routes.put(
 
 routes.get(
   '/deliveryboy/:deliveryboyId/deliveries',
-  DeliveryboyController.show
+  DeliveryActionsController.index
 );
 
 routes.get(
   '/deliveryboy/:deliveryboyId/deliveriesend',
-  DeliveryController.show
+  DeliveryActionsController.show
 );
-
-routes.put('/notifications/:id', NotificationController.update);
 
 routes.use(authMiddleware);
 
@@ -63,8 +60,5 @@ routes.get('/deliveries', DeliveryController.index);
 routes.post('/deliveries', DeliveryController.store);
 routes.put('/deliveries/:deliveryId', DeliveryController.update);
 routes.delete('/deliveries/:id', DeliveryController.delete);
-
-// Route for notifications
-routes.get('/notifications', NotificationController.index);
 
 export default routes;

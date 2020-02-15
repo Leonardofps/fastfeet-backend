@@ -4,6 +4,40 @@ import Delivery from '../models/Delivery';
 import Deliveryboy from '../models/Deliveryboy';
 
 class DeliveryActionsController {
+  async index(req, res) {
+    const { deliveryboyId } = req.params;
+    const deliveries = await Delivery.findAll({
+      where: {
+        deliveryboy_id: deliveryboyId,
+        end_date: null,
+        canceled_at: null,
+      },
+    });
+
+    if (!deliveries) {
+      return res
+        .status(400)
+        .json({ error: 'Not was possible to found a delivery' });
+    }
+
+    return res.json(deliveries);
+  }
+
+  async show(req, res) {
+    const { deliveryboyId } = req.params;
+    const deliveries = await Delivery.findAll({
+      where: {
+        deliveryboy_id: deliveryboyId,
+        canceled_at: null,
+        end_date: {
+          [Op.ne]: null,
+        },
+      },
+    });
+
+    return res.json(deliveries);
+  }
+
   async update(req, res) {
     const { deliveryId, deliveryboyId } = req.params;
 
