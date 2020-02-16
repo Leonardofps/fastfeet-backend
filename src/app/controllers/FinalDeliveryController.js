@@ -1,9 +1,20 @@
+import * as Yup from 'yup';
 import File from '../models/File';
 import Delivery from '../models/Delivery';
 import Deliveryboy from '../models/Deliveryboy';
 
 class FinalDeliveryController {
   async update(req, res) {
+    const schema = Yup.object().shape({
+      signature_id: Yup.number(),
+    });
+
+    if (!(await schema.isValid(req.body))) {
+      return res.status(400).json({ error: 'Validation fails' });
+    }
+
+    /** End of Validations from Yup */
+
     const { signature_id } = req.body;
     const { deliveryId, deliveryboyId } = req.params;
 

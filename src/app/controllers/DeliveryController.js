@@ -1,8 +1,8 @@
+import * as Yup from 'yup';
 import Delivery from '../models/Delivery';
 import Recipient from '../models/Recipient';
 import Deliveryboy from '../models/Deliveryboy';
 import File from '../models/File';
-import Notification from '../schemas/Notification';
 
 import NotificationMail from '../jobs/NotificationMail';
 import Queue from '../../lib/Queue';
@@ -20,6 +20,7 @@ class DeliveryController {
         'product',
         'start_date',
         'end_date',
+        'canceled_at',
         'recipient_id',
         'deliveryboy_id',
         'signature_id',
@@ -45,6 +46,18 @@ class DeliveryController {
   }
 
   async store(req, res) {
+    const schema = Yup.object().shape({
+      recipient_id: Yup.number().required(),
+      deliveryboy_id: Yup.number().required(),
+      product: Yup.string().required(),
+    });
+
+    if (!(await schema.isValid(req.body))) {
+      return res.status(400).json({ error: 'Validation fails' });
+    }
+
+    /** End of Validations from Yup */
+
     const { recipient_id, deliveryboy_id, product } = req.body;
 
     const recipient = await Recipient.findByPk(recipient_id);
@@ -75,11 +88,6 @@ class DeliveryController {
      * Notify a deliveryboy a new Delivery
      */
 
-    await Notification.create({
-      content: `There is a new order ready to be delivered, whose name is:  ${product} `,
-      product,
-    });
-
     await Queue.add(NotificationMail.key, {
       deliveryboy,
       product,
@@ -90,6 +98,19 @@ class DeliveryController {
   }
 
   async update(req, res) {
+    const schema = Yup.object().shape({
+      recipient_id: Yup.number().required(),
+      deliveryboy_id: Yup.number().required(),
+      signature_id: Yup.number(),
+      product: Yup.string().required(),
+    });
+
+    if (!(await schema.isValid(req.body))) {
+      return res.status(400).json({ error: 'Validation fails' });
+    }
+
+    /** End of Validations from Yup */
+
     const { deliveryId } = req.params;
     const { recipient_id, deliveryboy_id, product, signature_id } = req.body;
 

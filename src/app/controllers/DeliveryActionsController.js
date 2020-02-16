@@ -6,6 +6,12 @@ import Deliveryboy from '../models/Deliveryboy';
 class DeliveryActionsController {
   async index(req, res) {
     const { deliveryboyId } = req.params;
+    const deliveryboyExists = await Deliveryboy.findByPk(deliveryboyId);
+
+    if (!deliveryboyExists) {
+      return res.status(400).json({ error: 'Deliveryboy not exist' });
+    }
+
     const deliveries = await Delivery.findAll({
       where: {
         deliveryboy_id: deliveryboyId,
@@ -25,6 +31,11 @@ class DeliveryActionsController {
 
   async show(req, res) {
     const { deliveryboyId } = req.params;
+    const deliveryboyExists = await Deliveryboy.findByPk(deliveryboyId);
+
+    if (!deliveryboyExists) {
+      return res.status(400).json({ error: 'Deliveryboy not exist' });
+    }
     const deliveries = await Delivery.findAll({
       where: {
         deliveryboy_id: deliveryboyId,
